@@ -2,18 +2,12 @@
   width: 300px;
 }
 
-body {
-  margin: 0;
-  font-family: Arial, Helvetica, sans-serif;
-}
-
-
 html {
   scroll-behavior: smooth;
 }
 
 header {
-  background-color: aquamarine;
+  background-color: #b3409f;
   text-decoration: none;
   padding: 1em;
 }

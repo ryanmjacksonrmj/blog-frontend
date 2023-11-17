@@ -4,6 +4,10 @@ import { PostsNew } from "./PostsNew";
 import { useState, useEffect } from "react";
 import { Modal } from "./Modal";
 import { PostsShow } from "./PostsShow";
+import { Signup } from "./Signup";
+import { Login } from "./Login";
+import { LogoutLink } from "./LogoutLink";
+import { Routes, Route } from "react-router-dom";
 
 export function Content() {
 
@@ -18,6 +22,23 @@ export function Content() {
     });
   };
 
+  const handleUpdatePost = (id, params) => {
+    axios.patch(`http://localhost:3000/posts/${id}.json`, params).then((response) => {
+      console.log(response.data);
+      setCurrentPost(response.data);
+      setPosts(
+        posts.map((post) => {
+          if (post.id === response.data.id) {
+            return response.data;
+          } else {
+            return post;
+          }
+        })
+      )
+      handleClose();
+    });
+  }
+
   const handleCreatePost = (params) => {
     axios
     .post("http://localhost:3000/posts.json", params)
@@ -27,6 +48,14 @@ export function Content() {
     })
     .catch((error) => {
       console.log(error.response.data.error);
+    });
+  };
+
+  const handleDestroyPost = (post) => {
+    axios.delete(`http://localhost:3000/posts/${post.id}.json`).then((response) => { 
+      console.log(response.data);
+      setPosts(posts.filter((p) => p.id != post.id ));
+      handleClose();
     });
   };
 
@@ -44,10 +73,15 @@ export function Content() {
   return (
     <div>
       <div className="container">
+        <Routes>
+          <Route path="/signup" element ={<Signup />} />
+          <Route path="/login" element={<Login />} />
+        </Routes>
       <PostsNew onCreatePost={handleCreatePost} />
+      <LogoutLink />
       <PostsIndex posts={posts} onShowPost={handleShowPost}/>
       <Modal show ={isPostsShowVisible} onClose = {handleClose}>
-        <PostsShow post={currentPost} />
+        <PostsShow post={currentPost} onUpdatePost={handleUpdatePost} onDestroyPost={handleDestroyPost}/>
       </Modal>
       </div>
     </div>

@@ -3,6 +3,7 @@ import { useState } from "react";
 
 export function Signup() {
   const [errors, setErrors] = useState([]);
+  const [name, setName] = useState("");
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -13,6 +14,7 @@ export function Signup() {
       .then((response) => {
         console.log(response.data);
         event.target.reset();
+        localStorage.setItem("flashMessage", "User created!")
         window.location.href = "/"; // Change this to hide a modal, redirect to a specific page, etc.
       })
       .catch((error) => {
@@ -31,7 +33,8 @@ export function Signup() {
       </ul>
       <form onSubmit={handleSubmit}>
         <div>
-          Name: <input name="name" type="text" />
+          Name: <input name="name" type="text" value={name} onChange={(event) => setName(event.target.value)} />
+        <small>{20 - name.length} characters remaining</small>
         </div>
         <div>
           Email: <input name="email" type="email" />
